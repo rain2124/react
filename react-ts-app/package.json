@@ -1,9 +1,9 @@
 {
-  "name": "reskill-react",
+  "name": "react-ts-app",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "cra-template": "1.2.0",
+    "cra-template-typescript": "1.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-scripts": "5.0.1"
@@ -31,18 +31,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "volta": {
-    "node": "19.0.0"
-  },
-  "devDependencies": {
-    "@types/node": "^22.10.2",
-    "@types/react": "^19.0.1",
-    "@types/react-dom": "^19.0.2",
-    "ts-loader": "^9.5.1",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.7.2",
-    "webpack": "^5.97.1",
-    "webpack-cli": "^5.1.4"
   }
 }

@@ -5,15 +5,17 @@ import SelectBox from './components/SelectBox';
 import AdditionalLists from './components/AdditionalLists';
 import './App.css';
 
-// type Todo = {
-//   title: string;
-//   state: string;
+// const Lists = {
+//   id: number,
+//   title: string,
+//   state: string,
 // }
 
 const App = () => {
+  // const [additionalList, setAdditionalList] = useState<Lists>([]);
   const [additionalList, setAdditionalList] = useState([]);
   const [todoText, setTodoText] = useState('');
-  const [value, setValue] = useState('');
+  // const [value, setValue] = useState('');
   const [filter, setFilter] = useState('all')
   const [filterLists, setFilterLists] = useState([]);
 
@@ -22,9 +24,9 @@ const App = () => {
     setTodoText(e.target.value);
   };
   // ステータス変更
-  const handleStatusChange = (e) => {
-    setValue(e.target.value);
-  };
+  // const handleStatusChange = (e) => {
+  //   setValue(e.target.value);
+  // };
   const handleSetfilter = (e) => {
     setFilter(e.target.value);
   };
