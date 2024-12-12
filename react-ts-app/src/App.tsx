@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
-// import ReactDOM from 'react-dom/client';
+import ReactDOM from 'react-dom/client';
+import { v4 as uuidv4 } from 'uuid';
 import InputForm from './components/InputForm.tsx';
-import SelectBox from './components/SelectBox.tsx';
+import InputFormEdit from './components/InputFormEdit.tsx';
 import TodoLists from './components/TodoLists.tsx';
 import './App.css';
 
@@ -10,79 +11,131 @@ type Todo = {
   title: string;
   status: string;
 };
+// 初期リスト
+const initialTodos: Todo[] = [];
+type Filter = 'all' | 'notStarted' | 'inProgress' | 'done';
+export const App = () => {
+  const [todos, setTodos] = useState<Todo[]>(initialTodos);
+  // todosはTodo型の配列に指定 (initialTodos)にて初期値を設定。 10行目のconstにリスト追加すれば初期値が表示
+  const [todoTitle, setTodoTitle] = useState('');
+  const [todoId, setTodoId] = useState(todos.length + 1);
+  const [isEditable, setIsEditable] = useState(false);
+  const [editId, setEditId] = useState('');
+  const [newTitle, setNewTitle] = useState('');
+  const [filter, setFilter] = useState<Filter>('notStarted');
+  const [filteredTodos, setFilteredTodos] = useState<Todo[]>([]);
 
-const App = () => {
-  // const [todolists, settodolists] = useState<Lists>([]);
-  const [todolists, settodolists] = useState<Todo[]>([]);
-  const [todoText, setTodoText] = useState<string>("");
-  const [filter, setFilter] = useState('all')
-  const [filterLists, setFilterLists] = useState([]);
-
-  // リストタイトル置換
-  const onChangeTodoText = (e) => {
-    setTodoText(e.target.value);
+  // typescript の各種イベント
+  // <input>	React.ChangeEvent<HTMLInputElement>
+  // <textarea>	React.ChangeEvent<HTMLTextAreaElement>
+  // <select>	React.ChangeEvent<HTMLSelectElement>
+  
+  // input 入力欄取得
+  const handleAddFormChanges = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTodoTitle(e.target.value);
   };
-  // ステータス変更
-  // const handleStatusChange = (e) => {
-  //   setValue(e.target.value);
-  // };
-  const handleSetfilter = (e) => {
-    setFilter(e.target.value);
-  };
-  // 追加
-  const onClickAdd = () => {
-    if (todoText === '') return;
-    const newTodos = [...todolists, todoText];
-    settodolists(newTodos);
-    setTodoText('');
-  };
+  // input 入力欄リセット
+  const resetFormInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTodoTitle('')
+  }
+  // input todo追加
+  const handleAddTodo = () => {
+    if (todoTitle === '') return;
+    const newTodo: Todo = {
+      id: todoId,
+      title: todoTitle,
+      status: 'notStarted',
+    };
+    setTodos([...todos, newTodo]);
+    setTodoId(todoId + 1);
+    resetFormInput('');
+  }
   // 削除
-  const onClickDelete = (index) => {
-    const newTodos = [...todolists];
-    newTodos.splice(index, 1);
-    settodolists(newTodos);
+  const handleDeleteTodo = (targetTodo) => {
+    setTodos(todos.filter((todo) => todo !== targetTodo));
+  }
+  // editイベント
+  const handleOpenEditForm = (todo) => {
+    setIsEditable(true);
+    setEditId(todo.id);
+    setNewTitle(todo.title);
+  }
+  // editのタイトルをsetする
+  const handleEditFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewTitle(e.target.value);
+  }
+  const handleCloseEditForm = () => {
+    setIsEditable(false);
+    setEditId('');
+  }
+  const handleEditTodo = () => {
+    const newArray = todos.map((todo) =>
+      todo.id === editId ? { ...todo, title: newTitle } : todo
+    )
+    setTodos(newArray)
+    setNewTitle('')
+    setEditId()
+    handleCloseEditForm()
+  }
+  const handleStatusChange = (targetTodo, e) => {
+    const newArray = todos.map((todo) =>
+      todo.id === targetTodo.id ? { ...todo, status: e.target.value } : todo
+    )
+    setTodos(newArray)
+  }
+  // setFilter
+  const handleSetfilter = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFilter(e.target.value);
   }
 
+  // useeffect
   useEffect(() => {
     const filteringTodos = () => {
       switch (filter) {
-        // case 'notStarted':
-        //   setFilterLists(todolists.filter((list) => value === 'notStarted'))
-        //   break
-        // case 'inProgress':
-        //   setFilterLists(todolists.filter((list) => value === 'inProgress'))
-        //   break
-        // case 'done':
-        //   setFilterLists(todolists.filter((list) => value === 'done'))
-        //   break
+        case 'notStarted':
+          setFilteredTodos(todos.filter((todo) => todo.status === 'notStarted'))
+          break
+        case 'inProgress':
+          setFilteredTodos(todos.filter((todo) => todo.status === 'inProgress'))
+          break
+        case 'done':
+          setFilteredTodos(todos.filter((todo) => todo.status === 'done'))
+          break
         default:
-          setFilterLists(todolists)
+          setFilteredTodos(todos)
       }
     }
     filteringTodos()
-  }, [filter, todolists])
+  }, [filter, todos])
 
+
+  // 出力
   return (
     <>
-    <div className="wrapper">
-      <div className="inner">
-        <InputForm
-          todoText={todoText}
-          onChange={onChangeTodoText}
-          onClick={onClickAdd}
+      { isEditable ? (
+        <InputFormEdit 
+          value={newTitle}
+          onChange={handleEditFormChange}
+          onClick={handleEditTodo}
+          onClickCancel={handleCloseEditForm}
         />
-        <SelectBox
+      ) : (
+        <InputForm 
+          value={todoTitle}
+          onChange={handleAddFormChanges}
+          onClick={handleAddTodo}
           filter={filter}
-          onChange={handleSetfilter}
+          onChangeFilter={handleSetfilter}
         />
-        <h1>追加リスト</h1>
-        <TodoLists
-          filterLists={filterLists}
-          onClickDelete={onClickDelete}
-        />
-      </div>
-    </div>
+      )}
+      <TodoLists 
+        filteredTodos={filteredTodos}
+        handleStatusChange={handleStatusChange}
+        handleOpenEditForm={handleOpenEditForm}
+        handleDeleteTodo={handleDeleteTodo}
+      />
     </>
-  );
-}
+  )
+};
+
 export default App;
