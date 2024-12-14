@@ -1,10 +1,17 @@
-import React from 'react';
+// import TodoButton from './TodoButton';
+import { type TTodo } from '../App';
 
-const TodoLists = (props) => {
-  const { filteredTodos, handleStatusChange, handleOpenEditForm, handleDeleteTodo} = props;
+type TProps = {
+  filteredTodos: TTodo[]
+  handleStatusChange: (todo: TTodo, e: React.ChangeEvent<HTMLSelectElement>) => void
+  handleOpenEditForm: (id: number) => void
+  handleDeleteTodo: (id: number) => void
+}
+const TodoLists = (props: TProps) => {
+  const { filteredTodos, handleStatusChange, handleOpenEditForm, handleDeleteTodo } = props;
   return (
     <ul>
-      { filteredTodos.map((todo) => (
+      {filteredTodos.map((todo) => (
         <li key={todo.id}>
           <span>{todo.title}</span>
           <select
@@ -15,8 +22,9 @@ const TodoLists = (props) => {
             <option value="inProgress">作業中</option>
             <option value="done">完了</option>
           </select>
-          <button onClick={() => handleOpenEditForm(todo)}>編集</button>
-          <button onClick={() => handleDeleteTodo(todo)}>削除</button>
+          {/* <TodoButton clickFunc={() => handleOpenEditForm(todo)} label='編集' /> */}
+          <button onClick={() => handleOpenEditForm(todo.id)}>編集</button>
+          <button onClick={() => handleDeleteTodo(todo.id)}>削除</button>
         </li>
       ))}
     </ul>
