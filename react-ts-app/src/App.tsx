@@ -11,6 +11,7 @@ type Todo = {
   title: string;
   status: string;
 };
+
 // 初期リスト
 const initialTodos: Todo[] = [];
 type Filter = 'all' | 'notStarted' | 'inProgress' | 'done';
