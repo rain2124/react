@@ -1,24 +1,36 @@
-import {supabase} from '../lib/supabaseClient'
+import { Database } from '../lib/schema';
+import { supabase } from '../lib/supabaseClient'
+import { useState, useEffect } from 'react'
 
-export const FetchBlogs =  async () => {
-  const { data, error } = await supabase
-  .from('blog') // テーブル名
-  .select('*'); // 全カラムを取得
-  if (error) {
-    console.error('Error fetching blogs:', error.message);
-    return [];
-  }
-  console.log(data);
-  return data;
-  // return (
-  //   <>
-  //   {data.map((blog) => (
-  //     <div key={blog.id}>
-  //       <p>{blog.id}</p>
-  //       <p>{blog.title}</p>
-  //     </div>
-  //   ))}
-  //   </>
-  // )
-}
+type Blog = Database["public"]["Tables"]["blog"]["Row"];
 
+export const FetchBlogs = () => {
+  const [data, setData] = useState<Blog[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data, error } = await supabase
+        .from('blog')
+        .select('*');
+
+      if (error) {
+        console.error('Error fetching blogs:', error.message);
+        return;
+      }
+
+      setData(data);
+    };
+
+    fetchData();
+  }, []);
+
+  return (
+    <>
+      {data.map((blog) => (
+        <div key={blog.id}>
+          <p>{blog.title}</p>
+        </div>
+      ))}
+    </>
+  );
+};

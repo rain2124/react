@@ -36,19 +36,6 @@ export const App = () => {
   const temp = useMemo(() => 1+3, []);
   console.log(temp);
 
-  // const blogs = async() => {
-  //   return await FetchBlogs();
-  // }
-  // console.log(blogs);
-  console.log(blogs);
-  useEffect(() => {
-    const fetchBlogs = async() => {
-      const data = await FetchBlogs();
-      // setBlogs(data);
-    }
-    fetchBlogs();
-  }, [])
-
   return (
     <div className="App">
       {/* おさらい */}
@@ -75,7 +62,7 @@ export const App = () => {
         <Router />
       </BrowserRouter>
       {/* spabace */}
-      {/* <FetchBlogs /> */}
+      <FetchBlogs />
     </div>
   );
 }
