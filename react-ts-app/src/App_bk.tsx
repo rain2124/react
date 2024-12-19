@@ -1,31 +1,25 @@
 import { useEffect, useState } from 'react';
-import './App.css';
 import InputForm from './components/InputForm';
+import TodoLists from './components/TodoLists';
+import './App.css';
 
-// 型宣言
 export type TTodo = {
-  id: number,
-  title: string,
-  status: string,
+  id: number;
+  title: string;
+  status: string;
 };
-<<<<<<< HEAD
 
 // 初期リスト
-const initialTodos: Todo[] = [];
+const initialTodos: TTodo[] = [];
 type Filter = 'all' | 'notStarted' | 'inProgress' | 'done';
-=======
-export type Filter = 'all' | 'notStarted' | 'inProgress' | 'done';
-// 初期配列
-const initialTodos : TTodo[] = [];
-
->>>>>>> feature/plactice
 export const App = () => {
   const [todos, setTodos] = useState<TTodo[]>(initialTodos);
+  // todosはTodo型の配列に指定 (initialTodos)にて初期値を設定。 10行目のconstにリスト追加すれば初期値が表示
   const [todoTitle, setTodoTitle] = useState('');
   const [todoId, setTodoId] = useState<number>(todos.length + 1);
-  const [newTitle, setNewTitle] = useState('');
-  const [editId, setEditId] = useState<number | null>(null);
   const [isEditable, setIsEditable] = useState(false);
+  const [editId, setEditId] = useState<number | null>(null);
+  const [newTitle, setNewTitle] = useState('');
   const [filter, setFilter] = useState<Filter>('all');
   const [filteredTodos, setFilteredTodos] = useState<TTodo[]>([]);
 
@@ -34,29 +28,28 @@ export const App = () => {
   // <textarea>	React.ChangeEvent<HTMLTextAreaElement>
   // <select>	React.ChangeEvent<HTMLSelectElement>
 
-  // input
-  const handleAddFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // input 入力欄取得
+  const handleAddFormChanges = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTodoTitle(e.target.value);
   };
-  // 削除
-  const handleDeleteTodo = (todoId: number) => {
-    setTodos(todos.filter((todo) => todo.id !== todoId));
-  };
-  // 追加
+
+  // input todo追加
   const handleAddTodo = () => {
     if (todoTitle === '') return;
     const newTodo: TTodo = {
       id: todoId,
       title: todoTitle,
-      status: 'notStarted'
-    }
-    setTodos([...todos,newTodo]);
+      status: 'notStarted',
+    };
+    setTodos([...todos, newTodo]);
     setTodoId(todoId + 1);
-    setTodoTitle('');
+
+    // input 入力欄リセット
+    setTodoTitle('')
   }
-  // editのタイトルをsetする
-  const handleEditFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewTitle(e.target.value);
+  // 削除
+  const handleDeleteTodo = (todoId: number) => {
+    setTodos(todos.filter((todo) => todo.id !== todoId));
   }
   // editイベント
   const handleOpenEditForm = (todoId: number) => {
@@ -65,6 +58,10 @@ export const App = () => {
     setIsEditable(true);
     setEditId(findTodo.id);
     setNewTitle(findTodo.title);
+  }
+  // editのタイトルをsetする
+  const handleEditFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewTitle(e.target.value);
   }
   const handleCloseEditForm = () => {
     setIsEditable(false);
@@ -89,6 +86,7 @@ export const App = () => {
   const handleSetfilter = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setFilter(e.target.value as Filter);
   }
+
   // useeffect
   useEffect(() => {
     const filteringTodos = () => {
@@ -108,33 +106,15 @@ export const App = () => {
     }
     filteringTodos()
   }, [filter, todos])
+
+
+  // 出力
   return (
     <>
-      {/* { !isEditable ? (
-      <div>
-        <input
-          type='text'
-          placeholder='新規タイトル'
-          value={todoTitle}
-          onChange={handleAddFormChange}
-        />
-        <button onClick={handleAddTodo}>追加</button>
-      </div>
-      ) : (
-      <div>
-        <input
-          type="text"
-          value={newTitle}
-          onChange={handleEditFormChange}
-        />
-        <button onClick={handleEditTodo}>編集を保存</button>
-        <button onClick={handleCloseEditForm}>キャンセル</button>
-      </div>
-      )} */}
       <InputForm
         label={!isEditable ? 'タイトル' : '新しいタイトル'}
         value={!isEditable ? todoTitle : newTitle}
-        onChange={!isEditable ? handleAddFormChange : handleEditFormChange}
+        onChange={!isEditable ? handleAddFormChanges : handleEditFormChange}
         buttonLabel1={!isEditable ? '作成' : '編集を保存'}
         buttonLabel2={!isEditable ? undefined : 'キャンセル'}
         onClick1={!isEditable ? handleAddTodo : handleEditTodo}
@@ -146,28 +126,15 @@ export const App = () => {
         <option value="inProgress">作業中</option>
         <option value="done">完了</option>
       </select>
-      <ul>
-        {filteredTodos.map((todo) => (
-          <li key={todo.id}>
-            <span>{todo.title}</span>
-            <select
-              value={todo.status}
-              onChange={(e) => handleStatusChange(todo, e)}
-            >
-              <option value='notStarted'>未着手</option>
-              <option value='inProgress'>作業中</option>
-              <option value='done'>完了</option>
-            </select>
-            <button onClick={()=>handleOpenEditForm(todo.id)}>編集</button>
-            <button onClick={()=>handleDeleteTodo(todo.id)}>削除</button>
-          </li>
-        ))}
-      </ul>
+
+      <TodoLists
+        filteredTodos={filteredTodos}
+        handleStatusChange={handleStatusChange}
+        handleOpenEditForm={handleOpenEditForm}
+        handleDeleteTodo={handleDeleteTodo}
+      />
     </>
   )
-}
+};
 
 export default App;
-
-
-

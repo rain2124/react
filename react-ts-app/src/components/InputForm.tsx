@@ -1,25 +1,27 @@
-import React from 'react';
 
-const InputForm = (props) => {
-  const { value, onChange, onClick, filter, onChangeFilter} = props;
+type TProps = {
+  label: string
+  value: string
+  onChange: (value: React.ChangeEvent<HTMLInputElement>) => void
+  buttonLabel1: string
+  buttonLabel2?: string
+  onClick1: () => void
+  onClick2?: () => void
+}
+const InputForm = (props: TProps) => {
+  const { label, value, onChange, buttonLabel1, buttonLabel2, onClick1, onClick2 } = props;
   return (
-    <>
-      <div>
-        <input
-          type="text"
-          label="タイトル"
-          value={value}
-          onChange={onChange}
-        />
-        <button onClick={onClick}>作成</button>
-        <select value={filter} onChange={onChangeFilter}>
-          <option value="all">すべて</option>
-          <option value="notStarted">未着手</option>
-          <option value="inProgress">作業中</option>
-          <option value="done">完了</option>
-        </select>
-      </div>
-    </>
+    <div>
+      {label}：
+      <input
+        type="text"
+        placeholder={label}
+        value={value}
+        onChange={onChange}
+      />
+      <button onClick={onClick1}>{buttonLabel1}</button>
+      {onClick2 && <button onClick={onClick2}>{buttonLabel2}</button>}
+    </div>
   );
 };
 export default InputForm;
