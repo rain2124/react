@@ -16,6 +16,10 @@ import { FetchBlogs } from './compornents/FetchBlogs'
 // import { Page1DetailA } from './Page1DetailA';
 // import { Page1DetailB } from './Page1DetailB';
 import './App.css';
+import { PrimaryButton } from './compornents/atom/button/PrimaryButton';
+import { SecondaryButton } from './compornents/atom/button/SecondaryButton';
+import { SearchInput } from './compornents/molecules/SearchInput';
+import { UserCard } from './compornents/organisms/user/UserCard';
 
 
 export const App = () => {
@@ -63,6 +67,21 @@ export const App = () => {
       </BrowserRouter>
       {/* spabace */}
       <FetchBlogs />
+      {/* atom design */}
+      <PrimaryButton>primary</PrimaryButton>
+      <SecondaryButton>secondary</SecondaryButton>
+      <br />
+      <SearchInput />
+
+      <UserCard
+        image={'https://cdn.pixabay.com/photo/2022/09/29/03/17/baby-7486419_1280.jpg'}
+        alt={'画像'}
+        name={'名前'}
+        address={'mail@gmail.com'}
+        telNum={1111}
+        companyName={'dande'}
+        companyInfo={'創業100年'}
+      />
     </div>
   );
 }
