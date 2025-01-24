@@ -8,17 +8,12 @@ export type TTodo = {
   title: string,
   status: string,
 };
-<<<<<<< HEAD
 
-// 初期リスト
-const initialTodos: Todo[] = [];
-type Filter = 'all' | 'notStarted' | 'inProgress' | 'done';
-=======
 export type Filter = 'all' | 'notStarted' | 'inProgress' | 'done';
 // 初期配列
 const initialTodos : TTodo[] = [];
 
->>>>>>> feature/plactice
+
 export const App = () => {
   const [todos, setTodos] = useState<TTodo[]>(initialTodos);
   const [todoTitle, setTodoTitle] = useState('');
